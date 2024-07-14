@@ -113,7 +113,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Plan
-          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform.plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform init && terraform apply terraform.plan
