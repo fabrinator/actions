@@ -19,7 +19,7 @@ env:
 
 defaults:
   run:
-    working-directory: ${{ inputs.AWS_REGION }}
+    working-directory: /tmp
 
 jobs:
   requirements:
