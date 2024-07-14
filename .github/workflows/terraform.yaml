@@ -19,7 +19,7 @@ env:
 
 defaults:
   run:
-    working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
+    working-directory: ${{ inputs.AWS_REGION }}
 
 jobs:
   requirements:
