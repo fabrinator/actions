@@ -17,11 +17,11 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ inputs.AWS_REGION }}
 
-defaults:
-  run:
-    working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
 
 jobs:
+  defaults:
+    run:
+      working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
   requirements:
     runs-on: ubuntu-latest
     name: Requirements
