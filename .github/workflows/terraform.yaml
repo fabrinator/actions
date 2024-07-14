@@ -92,10 +92,9 @@ jobs:
             })
       - name: Upload artifact
         uses: actions/upload-artifact@v3
-        working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         with:
           name: Plan
-          path: terraform.plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform.plan
 
   terraform_approval:
     if: needs.terraform_plan.outputs.exitcode == '2'
@@ -111,10 +110,10 @@ jobs:
         uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v3
       - name: Download terraform plan
-        working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         uses: actions/download-artifact@v3
         with:
           name: Plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform.plan
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform init && terraform apply terraform.plan
