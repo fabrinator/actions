@@ -19,7 +19,7 @@ env:
 
 defaults:
   run:
-    working-directory: /tmp
+    working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
 
 jobs:
   requirements:
