@@ -1,4 +1,4 @@
-name: Reusable workflow example
+name: Reusable workflow
 on:
   workflow_call:
     inputs:
@@ -11,6 +11,11 @@ on:
       TF_WORKING_DIRECTORY:
         required: true
         type: string
+      GH_OIDC_AUTH:
+        required: false
+        type: boolean
+        default: true
+
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -41,17 +46,38 @@ jobs:
     environment: auto
     outputs:
       exitcode: ${{ steps.plan.outputs.exitcode }}
+      id_token: ${{ steps.idtoken.outputs.id_token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::621897290135:role/oidc-github-actions
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+        if: ${{ inputs.GH_OIDC_AUTH == true }}
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
+        with:
+          script: |
+            const action_core = require('@actions/core')
+            let id_token = await action_core.getIDToken('sts.amazonaws.com')
+            action_core.setOutput('id_token', id_token)
+        if: ${{ inputs.GH_OIDC_AUTH == true }}
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ inputs.TERRAFORM_VERSION }}
       - run: terraform init
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
+        env:
+          TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform plan -detailed-exitcode -no-color -out terraform.plan
+        env:
+          TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - run: terraform show -no-color terraform.plan >> $GITHUB_STEP_SUMMARY
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
       - uses: actions/github-script@v7
@@ -117,3 +143,5 @@ jobs:
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform init && terraform apply terraform.plan
+        env:
+          TF_VAR_id_token: ${{ needs.terraform_plan.outputs.id_token }}
