@@ -165,4 +165,3 @@ jobs:
         run: terraform init && terraform apply terraform.plan
         env:
           TF_VAR_id_token: ${{ needs.terraform_plan.outputs.id_token }}
-          GITHUB_TOKEN: ${{ secrets.GHA_TF_REPOSITORIES_AUTOMATION }}
