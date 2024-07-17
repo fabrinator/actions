@@ -68,7 +68,7 @@ jobs:
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
         if: ${{ inputs.GH_OIDC_AUTH == true }}
-      - name: Get Id Token
+      - name: Get Id Token for terraform providers can assume the role
         uses: actions/github-script@v7
         id: idtoken
         with:
@@ -148,6 +148,11 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - name: Setup environment credentials for accessing to the terraform backend
         run: eval "$(aws configure export-credentials --format env)"
+        if: ${{ inputs.GH_OIDC_AUTH == true }}
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_SHARED_ACCOUNT }}:role/oidc-github-actions
         if: ${{ inputs.GH_OIDC_AUTH == true }}
       - run: env
       - name: Download terraform plan
