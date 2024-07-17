@@ -59,8 +59,10 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::621897290135:role/oidc-github-actions
+          role-to-assume: arn:aws:iam::730335655220:role/oidc-github-actions
         if: ${{ inputs.GH_OIDC_AUTH == true }}
+      - run: eval "$(aws configure export-credentials --format env --profile crc-dev )"
+      - run: env
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
         if: ${{ inputs.GH_OIDC_AUTH == true }}
