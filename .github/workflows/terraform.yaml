@@ -96,7 +96,7 @@ jobs:
         run: terraform workspace select -or-create ${{ inputs.TF_WORKSPACE }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
-        run: terraform plan -detailed-exitcode -no-color -out terraform.plan ${{ inputs.TF_EXTRA_OPTIONS }}
+        run: terraform plan -detailed-exitcode -no-color -out terraform${{ inputs.TF_WORKSPACE }}.plan ${{ inputs.TF_EXTRA_OPTIONS }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - run: terraform show -no-color terraform.plan >> $GITHUB_STEP_SUMMARY
