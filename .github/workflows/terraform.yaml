@@ -87,10 +87,13 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ inputs.TERRAFORM_VERSION }}
-      - run: terraform init
+      - name: Terraform Init
+        run: terraform init
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
+      - name: Terraform Workspace
+        run: terraform workspace select ${{ inputs.TF_WORKSPACE }} || terraform worspace new ${{ inputs.TF_WORKSPACE }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform plan -detailed-exitcode -no-color -out terraform.plan ${{ inputs.TF_EXTRA_OPTIONS }}
