@@ -37,7 +37,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ inputs.AWS_REGION }}
   TF_VAR_AWS_SHARED_ACCOUNT: ${{ secrets.AWS_SHARED_ACCOUNT }}
-  TF_PLAN_FILE: terraform${{ inputs.TF_WORKSPACE }}.plan
+  TF_PLAN_FILE: terraform-${{ inputs.TF_WORKSPACE }}.plan
 
 
 jobs:
@@ -145,7 +145,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Plan
+          name: Plan-${{ env.TF_PLAN_FILE }}
           path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
 
   terraform_approval:
@@ -172,7 +172,7 @@ jobs:
       - name: Download terraform plan
         uses: actions/download-artifact@v3
         with:
-          name: Plan
+          name: Plan-${{ env.TF_PLAN_FILE }}
           path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
