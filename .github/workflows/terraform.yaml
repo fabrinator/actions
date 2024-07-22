@@ -141,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Plan
-          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform${{ input.TF_WORKSPACE }}.plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform${{ inputs.TF_WORKSPACE }}.plan
 
   terraform_approval:
     if: needs.terraform_plan.outputs.exitcode == '2'
