@@ -34,6 +34,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ inputs.AWS_REGION }}
   TF_VAR_AWS_SHARED_ACCOUNT: ${{ secrets.AWS_SHARED_ACCOUNT }}
+  TF_PLAN_FILE: terraform${{ inputs.TF_WORKSPACE }}.plan
 
 
 jobs:
@@ -99,7 +100,7 @@ jobs:
         run: terraform plan -detailed-exitcode -no-color -out terraform${{ inputs.TF_WORKSPACE }}.plan ${{ inputs.TF_EXTRA_OPTIONS }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
-      - run: terraform show -no-color terraform.plan >> $GITHUB_STEP_SUMMARY
+      - run: terraform show -no-color ${{ env.TF_PLAN_FILE }}  >> $GITHUB_STEP_SUMMARY
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
       - uses: actions/github-script@v7
         name: Plan to comment
