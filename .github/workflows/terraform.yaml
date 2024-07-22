@@ -145,7 +145,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Plan-${{ env.TF_PLAN_FILE }}
+          name: ${{ env.TF_PLAN_FILE }}
           path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
 
   terraform_approval:
@@ -172,8 +172,8 @@ jobs:
       - name: Download terraform plan
         uses: actions/download-artifact@v3
         with:
-          name: Plan-${{ env.TF_PLAN_FILE }}
-          path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
+          name: ${{ env.TF_PLAN_FILE }}
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform init && terraform apply ${{ env.TF_PLAN_FILE }}
