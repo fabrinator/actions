@@ -18,6 +18,9 @@ on:
         required: false
         default: default
         type: string
+      TF_PROVIDER_AWS_ACCOUNT:
+        required: false
+        type: string
       GH_OIDC_AUTH:
         required: false
         type: boolean
@@ -100,6 +103,7 @@ jobs:
         run: terraform plan -detailed-exitcode -no-color -out ${{ env.TF_PLAN_FILE }} ${{ inputs.TF_EXTRA_OPTIONS }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
+          TF_VAR_TF_PROVIDER_AWS_ACCOUNT: ${{ inputs.TF_PROVIDER_AWS_ACCOUNT }}
       - run: terraform show -no-color ${{ env.TF_PLAN_FILE }}  >> $GITHUB_STEP_SUMMARY
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
       - uses: actions/github-script@v7
