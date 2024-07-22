@@ -175,7 +175,7 @@ jobs:
           name: ${{ env.TF_PLAN_FILE }}
           path: ${{ inputs.TF_WORKING_DIRECTORY }}/
       - name: Display structure of downloaded files
-        run: ls -R your/destination/dir
+        run: ls -R  ${{ inputs.TF_WORKING_DIRECTORY }}/
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform init && terraform apply ${{ env.TF_PLAN_FILE }}
