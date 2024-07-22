@@ -161,13 +161,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v3
-      - name: Setup environment credentials for accessing to the terraform backend
-        run: eval "$(aws configure export-credentials --format env)"
-        if: ${{ inputs.GH_OIDC_AUTH == true }}
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::${{ secrets.AWS_SHARED_ACCOUNT }}:role/oidc-github-actions
+        if: ${{ inputs.GH_OIDC_AUTH == true }}
+      - name: Setup environment credentials for accessing to the terraform backend
+        run: eval "$(aws configure export-credentials --format env)"
         if: ${{ inputs.GH_OIDC_AUTH == true }}
       - name: Download terraform plan
         uses: actions/download-artifact@v3
