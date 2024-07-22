@@ -97,7 +97,7 @@ jobs:
         run: terraform workspace select -or-create ${{ inputs.TF_WORKSPACE }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
-        run: terraform plan -detailed-exitcode -no-color -out terraform${{ inputs.TF_WORKSPACE }}.plan ${{ inputs.TF_EXTRA_OPTIONS }}
+        run: terraform plan -detailed-exitcode -no-color -out ${{ env.TF_PLAN_FILE }} ${{ inputs.TF_EXTRA_OPTIONS }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - run: terraform show -no-color ${{ env.TF_PLAN_FILE }}  >> $GITHUB_STEP_SUMMARY
@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Plan
-          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform${{ inputs.TF_WORKSPACE }}.plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
 
   terraform_approval:
     if: needs.terraform_plan.outputs.exitcode == '2'
@@ -169,10 +169,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Plan
-          path: ${{ inputs.TF_WORKING_DIRECTORY }}/terraform${{ inputs.TF_WORKSPACE }}.plan
+          path: ${{ inputs.TF_WORKING_DIRECTORY }}/${{ env.TF_PLAN_FILE }}
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
-        run: terraform init && terraform apply terraform.plan
+        run: terraform init && terraform apply ${{ env.TF_PLAN_FILE }}
         env:
           TF_VAR_id_token: ${{ needs.terraform_plan.outputs.id_token }}
           GITHUB_TOKEN: ${{ secrets.GHA_TF_REPOSITORIES_AUTOMATION }}
