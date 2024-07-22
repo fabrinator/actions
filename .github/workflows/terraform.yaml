@@ -180,3 +180,4 @@ jobs:
         env:
           TF_VAR_id_token: ${{ needs.terraform_plan.outputs.id_token }}
           GITHUB_TOKEN: ${{ secrets.GHA_TF_REPOSITORIES_AUTOMATION }}
+          TF_VAR_TF_PROVIDER_AWS_ACCOUNT: ${{ inputs.TF_PROVIDER_AWS_ACCOUNT }}
