@@ -11,6 +11,13 @@ on:
       TF_WORKING_DIRECTORY:
         required: true
         type: string
+      TF_EXTRA_OPTIONS:
+        required: false
+        type: string
+      TF_WORKSPACE:
+        required: false
+        default: default
+        type: string
       GH_OIDC_AUTH:
         required: false
         type: boolean
@@ -19,9 +26,7 @@ on:
         required: false
         type: boolean
         default: false
-      EXTRA_TF_OPTIONS:
-        required: false
-        type: string
+
 
 
 env:
@@ -88,7 +93,7 @@ jobs:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
-        run: terraform plan -detailed-exitcode -no-color -out terraform.plan ${{ inputs.TF_WORKING_DIRECTORY }}
+        run: terraform plan -detailed-exitcode -no-color -out terraform.plan ${{ inputs.TF_EXTRA_OPTIONS }}
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - run: terraform show -no-color terraform.plan >> $GITHUB_STEP_SUMMARY
