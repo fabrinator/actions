@@ -54,7 +54,9 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       if: ${{ inputs.AUTO_MERGE == true }}
     - name: Add Label to the PR
-      run: gh label create $LABEL --color $COLOR --force
+      run: |
+        gh label create $LABEL --color $COLOR --force
+        gh pr edit --add-label $LABEL
       env:
         GH_TOKEN: ${{ github.token }}
         LABEL: ${{ inputs.TF_WORKSPACE }}
