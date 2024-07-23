@@ -15,8 +15,7 @@ on:
         required: false
         type: string
       TF_WORKSPACE:
-        required: false
-        default: default
+        required: true
         type: string
       TF_PROVIDER_AWS_ACCOUNT:
         required: false
@@ -153,7 +152,7 @@ jobs:
     name: Terraform Apply
     runs-on: ubuntu-latest
     needs: [ requirements, terraform_plan ]
-    environment: manual_approval
+    environment:  ${{ inputs.TF_WORKSPACE == 'prod' && 'manual_approval' || 'auto' }}
     steps:
       - uses: hashicorp/setup-terraform@v3
         with:
