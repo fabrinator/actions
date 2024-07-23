@@ -37,6 +37,7 @@ env:
   AWS_REGION: ${{ inputs.AWS_REGION }}
   TF_VAR_AWS_SHARED_ACCOUNT: ${{ secrets.AWS_SHARED_ACCOUNT }}
   TF_PLAN_FILE: terraform-${{ inputs.TF_WORKSPACE }}.plan
+  TF_WORKSPACE: ${{inputs.TF_WORKSPACE}}-${{ inputs.AWS_REGION }}
 
 
 jobs:
@@ -96,7 +97,7 @@ jobs:
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - name: Terraform Workspace
-        run: terraform workspace select -or-create ${{ inputs.TF_WORKSPACE }}
+        run: terraform workspace select -or-create ${{ env.TF_WORKSPACE }}
       - id: plan
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform plan -detailed-exitcode -no-color -out ${{ env.TF_PLAN_FILE }} ${{ inputs.TF_EXTRA_OPTIONS }}
@@ -179,7 +180,7 @@ jobs:
         env:
           TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - name: Terraform Workspace
-        run: terraform workspace select -or-create ${{ inputs.TF_WORKSPACE }}
+        run: terraform workspace select -or-create ${{ env.TF_WORKSPACE }}
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
         run: terraform apply ${{ env.TF_PLAN_FILE }}
