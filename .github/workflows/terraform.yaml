@@ -174,12 +174,17 @@ jobs:
         with:
           name: ${{ env.TF_PLAN_FILE }}
           path: ${{ inputs.TF_WORKING_DIRECTORY }}/
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
+        env:
+          TF_VAR_id_token: ${{ steps.idtoken.outputs.id_token }}
       - name: Terraform Workspace
         run: terraform workspace select -or-create ${{ inputs.TF_WORKSPACE }}
       - run: terraform workspace list
       - name: Terraform Apply
         working-directory: ${{ inputs.TF_WORKING_DIRECTORY }}
-        run: terraform init && terraform apply ${{ env.TF_PLAN_FILE }}
+        run: terraform apply ${{ env.TF_PLAN_FILE }}
         env:
           TF_VAR_id_token: ${{ needs.terraform_plan.outputs.id_token }}
           GITHUB_TOKEN: ${{ secrets.GHA_TF_REPOSITORIES_AUTOMATION }}
