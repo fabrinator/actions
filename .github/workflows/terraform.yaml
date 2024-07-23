@@ -56,11 +56,12 @@ jobs:
     - name: Add Label to the PR
       run: |
         gh label create $LABEL --color $COLOR --force
-        gh pr edit --add-label $LABEL
+        gh pr edit $PR --add-label $LABEL
       env:
         GH_TOKEN: ${{ github.token }}
         LABEL: ${{ inputs.TF_WORKSPACE }}
         COLOR: ${{ inputs.TF_WORKSPACE == 'prod' && 'B60205' || '008672' }}
+        PR: ${{ github.event.number }}
     - uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: ${{ inputs.TERRAFORM_VERSION }}
