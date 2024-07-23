@@ -54,10 +54,11 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       if: ${{ inputs.AUTO_MERGE == true }}
     - name: Add Label to the PR
-      run: gh label create $LABEL --color E99695 --force
+      run: gh label create $LABEL --color $COLOR --force
       env:
         GH_TOKEN: ${{ github.token }}
         LABEL: ${{ inputs.TF_WORKSPACE }}
+        COLOR: ${{ inputs.TF_WORKSPACE == 'prod' && 'B60205' || '008672' }}
     - uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: ${{ inputs.TERRAFORM_VERSION }}
