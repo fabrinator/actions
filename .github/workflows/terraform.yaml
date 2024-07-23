@@ -52,6 +52,7 @@ jobs:
       run: gh pr merge $GITHUB_HEAD_REF --merge --auto
       env:
         GH_TOKEN: ${{ github.token }}
+      if: ${{ inputs.AUTO_MERGE == true }}
     - name: Add Label to the PR
       run: gh label create $LABEL --color E99695
       env:
