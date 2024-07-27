@@ -1,0 +1,17 @@
+name: Reusable workflow for AWS SAM
+on:
+  workflow_call:
+
+jobs:
+  requirements:
+    runs-on: ubuntu-latest
+    name: Requirements
+    environment:  auto
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.14'
+          cache: 'pip'
+      - run: pip install -r route-53-automation/tests/requirements.txt
