@@ -28,3 +28,20 @@ jobs:
         run: |
           sam validate
         working-directory: ${{ inputs.PROJECT_FOLDER }}
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    environment:  auto
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: SAM Build
+        run: |
+          sam build
+      - name: Run unit tests
+        run: |
+          coverage run -m pytest -v  route-53-automation/tests/unit
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
+      - name: Coverage Report
+        run: coverage report -m
