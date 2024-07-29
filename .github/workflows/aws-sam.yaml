@@ -59,6 +59,7 @@ jobs:
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
           cache: 'pip'
+      - run: ls -la
       - name: SAM Build
         run: |
           sam build
