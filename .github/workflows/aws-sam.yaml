@@ -14,6 +14,7 @@ on:
       AWS_DEPLOY_PROD:
         required: false
         type: string
+        default: "['136273067277', '621897290135']"
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
