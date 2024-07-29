@@ -24,6 +24,7 @@ jobs:
           python-version: ${{ inputs.PYTHON_VERSION }}
           cache: 'pip'
       - run: pip install -r ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
+      - run: coverage --help
       - name: SAM Validate
         run: |
           sam validate
