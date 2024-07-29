@@ -133,7 +133,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::${{ maxtrix.accounts }}:role/oidc-github-actions
+          role-to-assume: arn:aws:iam::${{ matrix.accounts }}:role/oidc-github-actions
       - name: Restore cached virtualenv
         uses: actions/cache/restore@v4
         with:
