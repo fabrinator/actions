@@ -19,7 +19,6 @@ jobs:
     environment:  auto
     outputs:
       python-version: ${{ steps.setup_python.outputs.python-version }}
-      github-path: ${{ steps.venv.outputs.GITHUB_PATH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -58,8 +57,6 @@ jobs:
     name: Build
     environment:  auto
     needs: requirements
-    env:
-      GITHUB_PATH: ${{ needs.requirements.outputs.github-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -74,7 +71,10 @@ jobs:
           path: .venv
       - name: Activate venv
         run: |
-          source .venv/bin/activate
+          source .venv/bin/activate          
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+          echo "GITHUB_PATH=$GITHUB_PATH" >> $GITHUB_OUTPUT
       - run: |
           env
       - name: SAM Build
