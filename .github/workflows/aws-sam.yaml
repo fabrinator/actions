@@ -117,7 +117,7 @@ jobs:
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: SAM Deploy
-        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=dev --no-confirm-changeset --no-fail-on-empty-changeset
+        run: sam deploy --stack-name ${{ env.AWS_SAM_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=dev --no-confirm-changeset --no-fail-on-empty-changeset
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Integration tests
         run: pytest -v  ${{ inputs.PROJECT_FOLDER }}/tests/integration
@@ -141,5 +141,5 @@ jobs:
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: SAM Deploy
-        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
+        run: sam deploy --stack-name ${{ env.AWS_SAM_STACK_NAME }} --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
         working-directory: ${{ inputs.PROJECT_FOLDER }}
