@@ -143,4 +143,4 @@ jobs:
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: SAM Deploy
-        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
+        run: sam deploy --stack-name ${{ inputs.PROJECT_FOLDER }} --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
