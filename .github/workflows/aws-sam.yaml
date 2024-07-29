@@ -8,6 +8,9 @@ on:
       PROJECT_FOLDER:
         required: true
         type: string
+      AWS_ACCOUNT:
+        required: true
+        type: string
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
@@ -51,11 +54,6 @@ jobs:
         with:
           key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
           path: .venv
-      - run: coverage --help
-      - name: SAM Validate
-        run: |
-          sam validate
-        working-directory: ${{ inputs.PROJECT_FOLDER }}
 
   build:
     runs-on: ubuntu-latest
@@ -79,14 +77,28 @@ jobs:
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
           echo "GITHUB_PATH=$GITHUB_PATH" >> $GITHUB_OUTPUT
-      - run: |
-          env
-      - name: SAM Build
+      - name: SAM Validate
         run: |
-          sam build
+          sam validate
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Run unit tests
         run: |
           coverage run -m pytest -v ${{ inputs.PROJECT_FOLDER }}/tests/unit
       - name: Coverage Report
         run: coverage report -m
+  deploy-dev:
+    runs-on: ubuntu-latest
+    name: Build
+    environment:  auto
+    needs: requirements
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/oidc-github-actions-
+      - name: SAM Build
+        run: sam build
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
+      - name: SAM Deploy
+        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=dev
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
