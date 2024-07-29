@@ -11,6 +11,9 @@ on:
       AWS_ACCOUNT:
         required: true
         type: string
+      AWS_DEPLOY_PROD:
+        required: false
+        type: string
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
@@ -117,3 +120,11 @@ jobs:
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Integration tests
         run: pytest -v  ${{ inputs.PROJECT_FOLDER }}/tests/integration
+  deploy-prod:
+    needs: deploy-dev
+    strategy:
+      matrix:
+        accounts: ${{ fromJSON(inputs.AWS_DEPLOY_PROD)}}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ matrix.accounts }}"
