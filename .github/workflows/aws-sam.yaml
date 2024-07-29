@@ -14,7 +14,6 @@ on:
       AWS_DEPLOY_PROD:
         required: false
         type: string
-        default: "['136273067277', '621897290135']"
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
@@ -123,9 +122,25 @@ jobs:
         run: pytest -v  ${{ inputs.PROJECT_FOLDER }}/tests/integration
   deploy-prod:
     needs: deploy-dev
+    environment: manual_approval
     strategy:
       matrix:
         accounts: ${{ fromJSON(inputs.AWS_DEPLOY_PROD)}}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ matrix.accounts }}"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::${{ maxtrix.accounts }}:role/oidc-github-actions
+      - name: Restore cached virtualenv
+        uses: actions/cache/restore@v4
+        with:
+          key: venv-${{ runner.os }}-${{ needs.requirements.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
+          path: .venv
+      - name: SAM Build
+        run: sam build
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
+      - name: SAM Deploy
+        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
