@@ -41,6 +41,7 @@ jobs:
         with:
           key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
           path: .venv
+      - run: ls -la
       - run: coverage --help
       - name: SAM Validate
         run: |
