@@ -95,7 +95,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
-          role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/oidc-github-actions-
+          role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/oidc-github-actions
       - name: SAM Build
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
