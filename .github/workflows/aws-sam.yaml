@@ -60,6 +60,11 @@ jobs:
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
           cache: 'pip'
+      - name: Restore cached virtualenv
+        uses: actions/cache/restore@v4
+        with:
+          key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
+          path: .venv
       - run: ls -la
       - name: SAM Build
         run: |
