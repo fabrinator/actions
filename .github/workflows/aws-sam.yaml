@@ -68,7 +68,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
-          cache: 'pip'
       - name: Restore cached virtualenv
         uses: actions/cache/restore@v4
         with:
@@ -88,7 +87,8 @@ jobs:
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Run unit tests
         run: |
-          coverage run -m pytest -v -s tests/unit
+          coverage run -m pytest -v tests/unit
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Coverage Report
         run: coverage report -m
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
