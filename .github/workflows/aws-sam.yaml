@@ -9,7 +9,8 @@ on:
         required: true
         type: string
 
-
+env:
+  REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
 
 jobs:
   requirements:
@@ -20,11 +21,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: actions/setup-python@v5
+        id: setup_python
         with:
           python-version: ${{ inputs.PYTHON_VERSION }}
-          cache: 'pip'
-          cache-dependency-path: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
-      - run: pip install -r ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
+      - name: Restore cached virtualenv
+        uses: actions/cache/restore@v4
+        with:
+          key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
+          path: .venv
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install -r ${{ env.REQUIREMENTS_FILE }}
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+      - name: Saved cached virtualenv
+        uses: actions/cache/save@v4
+        with:
+          key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
+          path: .venv
       - run: coverage --help
       - name: SAM Validate
         run: |
