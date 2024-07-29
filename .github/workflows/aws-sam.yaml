@@ -88,9 +88,9 @@ jobs:
         run: coverage report -m
   deploy-dev:
     runs-on: ubuntu-latest
-    name: Build
+    name: Deploy Dev
     environment:  auto
-    needs: requirements
+    needs: build
     steps:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
