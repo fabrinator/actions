@@ -67,6 +67,9 @@ jobs:
         with:
           key: venv-${{ runner.os }}-${{ needs.requirements.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
           path: .venv
+      - name: Activate venv
+        run: |
+          source .venv/bin/activate
       - run: ls -la
       - name: SAM Build
         run: |
