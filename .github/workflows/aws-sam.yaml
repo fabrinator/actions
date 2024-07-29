@@ -134,13 +134,9 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::${{ matrix.accounts }}:role/oidc-github-actions
-      - name: Restore cached virtualenv
-        uses: actions/cache/restore@v4
-        with:
-          key: venv-${{ runner.os }}-${{ needs.requirements.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
-          path: .venv
       - name: SAM Build
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: SAM Deploy
-        run: sam deploy --stack-name ${{ inputs.PROJECT_FOLDER }} --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
+        run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=prod --no-confirm-changeset --no-fail-on-empty-changeset
+        working-directory: ${{ inputs.PROJECT_FOLDER }}
