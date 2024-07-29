@@ -98,9 +98,22 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/oidc-github-actions
+      - name: Restore cached virtualenv
+        uses: actions/cache/restore@v4
+        with:
+          key: venv-${{ runner.os }}-${{ needs.requirements.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
+          path: .venv
+      - name: Activate venv
+        run: |
+          source .venv/bin/activate          
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+          echo "GITHUB_PATH=$GITHUB_PATH" >> $GITHUB_OUTPUT
       - name: SAM Build
         run: sam build
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: SAM Deploy
         run: sam deploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=dev --no-confirm-changeset --no-fail-on-empty-changeset
         working-directory: ${{ inputs.PROJECT_FOLDER }}
+      - name: Integration tests
+        run: pytest -v  ${{ inputs.PROJECT_FOLDER }}/tests/integration
