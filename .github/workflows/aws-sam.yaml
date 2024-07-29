@@ -87,8 +87,6 @@ jobs:
         working-directory: ${{ inputs.PROJECT_FOLDER }}
       - name: Run unit tests
         run: |
-          coverage run -m pytest -v tests/unit
-        working-directory: ${{ inputs.PROJECT_FOLDER }}
+          coverage run -m pytest -v ${{ inputs.PROJECT_FOLDER }}/tests/unit
       - name: Coverage Report
         run: coverage report -m
-        working-directory: ${{ inputs.PROJECT_FOLDER }}
