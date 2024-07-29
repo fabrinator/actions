@@ -19,6 +19,7 @@ jobs:
     environment:  auto
     outputs:
       python-version: ${{ steps.setup_python.outputs.python-version }}
+      github-path: ${{ steps.venv.outputs.GITHUB_PATH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -32,12 +33,14 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles(env.REQUIREMENTS_FILE) }}
           path: .venv
       - name: Install dependencies
+        id: venv
         run: |
           python -m venv .venv
           source .venv/bin/activate
           python -m pip install -r ${{ env.REQUIREMENTS_FILE }}
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+          echo "GITHUB_PATH=$GITHUB_PATH" >> $GITHUB_OUTPUT
       - name: Saved cached virtualenv
         uses: actions/cache/save@v4
         with:
@@ -55,6 +58,8 @@ jobs:
     name: Build
     environment:  auto
     needs: requirements
+    env:
+      GITHUB_PATH: ${{ needs.requirements.outputs.github-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -70,7 +75,8 @@ jobs:
       - name: Activate venv
         run: |
           source .venv/bin/activate
-      - run: env | grep VIRTUAL
+      - run: |
+          env
       - name: SAM Build
         run: |
           sam build
