@@ -17,6 +17,7 @@ on:
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
+  AWS_DEFAULT_REGION: "us-east-1"
 jobs:
   requirements:
     runs-on: ubuntu-latest
