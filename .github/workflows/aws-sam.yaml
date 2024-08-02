@@ -14,6 +14,7 @@ on:
       AWS_DEPLOY_PROD:
         required: false
         type: string
+        default: ''
 
 env:
   REQUIREMENTS_FILE: ${{ inputs.PROJECT_FOLDER }}/tests/requirements.txt
@@ -123,6 +124,7 @@ jobs:
       - name: Integration tests
         run: pytest -v  ${{ inputs.PROJECT_FOLDER }}/tests/integration
   deploy-prod:
+    if: inputs.AWS_DEPLOY_PROD != ''
     needs: deploy-dev
     environment: manual_approval
     env:
