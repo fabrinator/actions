@@ -1,0 +1,9 @@
+name: AWS OIDC Auth
+
+runs:
+  using: 'composite'
+  steps:    
+    - uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT }}:role/oidc-github-actions    
