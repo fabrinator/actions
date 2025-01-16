@@ -1,4 +1,13 @@
 name: AWS OIDC Auth
+description: Authenticate to AWS using OIDC
+inputs:
+  AWS_ACCOUNT:
+    description: Account number to authenticate
+    required: true
+  AWS_ROLE:
+    description: AWS role used to authenticate
+    required: false
+    default: oidc-github-actions
 
 runs:
   using: 'composite'
@@ -6,4 +15,4 @@ runs:
     - uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT }}:role/oidc-github-actions    
+        role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/${{ inputs.AWS_ROLE }}
