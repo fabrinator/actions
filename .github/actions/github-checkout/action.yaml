@@ -10,6 +10,10 @@ inputs:
 runs:
   using: 'composite'
   steps:    
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"  
     - name: Checkout Public Repo 
       uses: actions/checkout@v4
       if: github.repository_visibility != 'private'  
