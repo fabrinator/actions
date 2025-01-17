@@ -36,7 +36,7 @@ on:
 jobs:
   workflow_cdk:
     runs-on: ubuntu-latest
-    name: CDK deploy
+    name: CDK
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Checkout 
@@ -59,12 +59,12 @@ jobs:
 
       - name: Node dependencies
         run: npm install
-        working-directory: ${{ inputs.WORK_DIR}}   
+        working-directory: ${{ inputs.WORK_DIR }}   
 
       - name: aws cdk diff
         run: cdk diff
-        working-directory: ${{ inputs.WORK_DIR}}    
+        working-directory: ${{ inputs.WORK_DIR }}    
 
       - name: aws cdk Deploy
         run: cdk deploy --require-approval never
-        working-directory: ${{ inputs.WORK_DIR}}                      
+        working-directory: ${{ inputs.WORK_DIR }}                      
