@@ -22,6 +22,11 @@ on:
         required: false
         default: 22
         type: string
+      AWS_ENVIRONMENT:
+        description: AWS environment where CDK would be deployed. Used on cdk scripts.
+        required: false
+        default: not-prod
+        type: string
 
 
     secrets:
@@ -32,6 +37,8 @@ on:
         description: Account number to authenticate
         required: true
 
+env:
+  AWS_ENVIRONMENT: ${{ inputs.AWS_ENVIRONMENT }}
 
 jobs:
   workflow_cdk:
