@@ -7,14 +7,28 @@ on:
         required: false
         default: oidc-github-actions
         type: string
+      WORK_DIR:
+        description: Directory where are
+        required: false
+        default: "/src/html"
+        type: string
+      AWS_ACCOUNT:
+        description: Account number to authenticate
+        required: true
+        type: string
+      S3_BUCKET:
+        description: Bucket name
+        required: true
+        type: string
+      CLOUD_FRONT_DISTRIBUTION_ID:
+        required: true
+        type: string
+
 
     secrets:
       GH_TOKEN:
         description: GH TOKEN for accessing to privates repos
         required: false
-      AWS_ACCOUNT:
-        description: Account number to authenticate
-        required: true
 
 
 jobs:
@@ -30,9 +44,9 @@ jobs:
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
-          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}    
+          AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}    
       - name: Sync S3
-        run: aws s3 sync ./  s3://dev.fabririvas.com   
-        working-directory: "src/html"
+        run: aws s3 sync ./  s3://${{ inputs.S3_BUCKET }}
+        working-directory: ${{ inputs.WORK_DIR}}
       - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id E3D7115DJ5R44C --paths "/*"                
+        run: aws cloudfront create-invalidation --distribution-id ${{ inputs.CLOUD_FRONT_DISTRIBUTION_ID}} --paths "/*"                
