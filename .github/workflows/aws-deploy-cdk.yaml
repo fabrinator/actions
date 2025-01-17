@@ -47,15 +47,12 @@ jobs:
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
-          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}    
-
-      - name: Invalidate CloudFront Cache
-        run: aws cloudfront create-invalidation --distribution-id ${{ inputs.CLOUD_FRONT_DISTRIBUTION_ID}} --paths "/*"                
+          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}             
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22        
+          node-version: ${{ inputs.NODE_VERSION }}        
 
       - name: Install aws cdk
         run: npm install -g aws-cdk@2.175.1          
