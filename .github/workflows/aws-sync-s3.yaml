@@ -12,10 +12,6 @@ on:
         required: false
         default: "/src/html"
         type: string
-      AWS_ACCOUNT:
-        description: Account number to authenticate
-        required: true
-        type: string
       S3_BUCKET:
         description: Bucket name
         required: true
@@ -29,6 +25,9 @@ on:
       GH_TOKEN:
         description: GH TOKEN for accessing to privates repos
         required: false
+      AWS_ACCOUNT:
+        description: Account number to authenticate
+        required: true
 
 
 jobs:
