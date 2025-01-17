@@ -12,17 +12,15 @@ on:
         required: false
         default: "/src/html"
         type: string
-      S3_BUCKET:
-        description: Bucket name
-        required: true
-        type: string
-      CLOUD_FRONT_DISTRIBUTION_ID:
-        required: true
-        type: string
       ENVIRONMENT:
         description: Github Environment
         required: false
         default: auto
+        type: string
+      NODE_VERSION:
+        description: Node version
+        required: false
+        default: 22
         type: string
 
 
@@ -41,17 +39,35 @@ jobs:
     name: Sync AWS S3
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout 
+        uses: fabrinator/actions/.github/actions/github-checkout@feature/oidc-auth
         with:
-          repository: fabrinator/resume-html
-          token: ${{ secrets.GH_TOKEN }}       
+          GH_TOKEN: ${{ secrets.GH_TOKEN }} 
+
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
           AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}    
-      - name: Sync S3
-        run: aws s3 sync ./  s3://${{ inputs.S3_BUCKET }}
-        working-directory: ${{ inputs.WORK_DIR}}
+
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ inputs.CLOUD_FRONT_DISTRIBUTION_ID}} --paths "/*"                
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22        
+
+      - name: Install aws cdk
+        run: npm install -g aws-cdk@2.175.1          
+
+      - name: Node dependencies
+        run: npm install
+        working-directory: ${{ inputs.WORK_DIR}}   
+
+      - name: aws cdk diff
+        run: cdk diff
+        working-directory: ${{ inputs.WORK_DIR}}    
+
+      - name: aws cdk Deploy
+        run: cdk deploy --require-approval never
+        working-directory: ${{ inputs.WORK_DIR}}                      
