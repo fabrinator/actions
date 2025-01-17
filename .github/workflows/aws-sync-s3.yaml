@@ -43,6 +43,8 @@ jobs:
     steps:
       - name: Checkout 
         uses: fabrinator/actions/.github/actions/github-checkout@feature/oidc-auth
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
