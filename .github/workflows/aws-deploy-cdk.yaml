@@ -1,4 +1,4 @@
-name: Reusable workflow for SYNC S3
+name: Reusable workflow for Deploy CDK
 on:
   workflow_call:
     inputs:
@@ -44,9 +44,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository.full_name}}
-          token: ${{ secrets.GH_TOKEN }} 
-        if: github.repository_visibility == "private"
+          repository: fabrinator/resume-html
+          token: ${{ secrets.GH_TOKEN }}       
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
