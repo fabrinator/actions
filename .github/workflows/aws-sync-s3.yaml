@@ -43,7 +43,7 @@ jobs:
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
-          AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}    
+          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}    
       - name: Sync S3
         run: aws s3 sync ./  s3://${{ inputs.S3_BUCKET }}
         working-directory: ${{ inputs.WORK_DIR}}
