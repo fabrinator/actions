@@ -1,14 +1,11 @@
 name: Github Checkout
 description: Action for checkout privates and public repos
+
 # for private repositories you need to pass the GH token.
 inputs:
-  AWS_ACCOUNT:
-    description: Account number to authenticate
-    required: true
-  AWS_ROLE:
-    description: AWS role used to authenticate
+  GH_TOKEN:
+    description: GH TOKEN for accessing to privates repos
     required: false
-    default: oidc-github-actions
 
 runs:
   using: 'composite'
@@ -20,5 +17,5 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: ${{ github.repository.full_name}}
-        token: ${{ secrets.GH_TOKEN }} 
+        token: ${{ inputs.GH_TOKEN }} 
       if: github.repository_visibility == 'private'
