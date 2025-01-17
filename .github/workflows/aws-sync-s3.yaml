@@ -2,19 +2,19 @@ name: Reusable workflow for SYNC S3
 on:
   workflow_call:
     inputs:
-      AWS_ACCOUNT:
-        description: Account number to authenticate
-        required: true
-        type: string
       AWS_ROLE:
         description: AWS role used to authenticate
         required: false
         default: oidc-github-actions
         type: string
+
+    secrets:
       GH_TOKEN:
         description: GH TOKEN for accessing to privates repos
         required: false
-        type: string      
+      AWS_ACCOUNT:
+        description: Account number to authenticate
+        required: true
 
 
 jobs:
