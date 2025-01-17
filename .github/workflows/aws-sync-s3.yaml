@@ -26,11 +26,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: fabrinator/resume-html
-          token: ${{ inputs.GH_TOKEN }}       
+          token: ${{ secrets.GH_TOKEN }}       
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
-          AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}    
+          AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}    
       - name: Sync S3
         run: aws s3 sync ./  s3://dev.fabririvas.com   
         working-directory: "src/html"
