@@ -46,7 +46,7 @@ jobs:
         with:
           repository: ${{ github.repository.full_name}}
           token: ${{ secrets.GH_TOKEN }} 
-        if: github.repository_visibility == private
+        if: github.repository_visibility == 'private'
       - name: Aws OIDC Auth
         uses: fabrinator/actions/.github/actions/aws-oidc-auth@feature/oidc-auth
         with:
