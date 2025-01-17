@@ -34,9 +34,9 @@ on:
 
 
 jobs:
-  aws_sync_s3:
+  workflow_cdk:
     runs-on: ubuntu-latest
-    name: Sync AWS S3
+    name: CDK deploy
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Checkout 
