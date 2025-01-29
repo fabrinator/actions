@@ -12,7 +12,7 @@ inputs:
 runs:
   using: 'composite'
   steps:    
-    - uses: aws-actions/configure-aws-credentials@v4
+    - uses: aws-actions/configure-aws-credentials@v4.0.3
       with:
         aws-region: us-east-1
         role-to-assume: arn:aws:iam::${{ inputs.AWS_ACCOUNT }}:role/${{ inputs.AWS_ROLE }}
